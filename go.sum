@@ -1,5 +1,7 @@
 github.com/google/btree v1.1.2 h1:xf4v41cLI2Z6FxbKm+8Bu+m8ifhj15JuZ9sa0jZCMUU=
 github.com/google/btree v1.1.2/go.mod h1:qOPhT0dTNdNzV6Z/lhRX0YXUafgPLFUh+gZMl761Gm4=
+github.com/imgk/divert-go v0.0.0-20220205193416-faaa83c2c10a h1:wkU8llyuZtm80Ak6f7/QAmCq/LSwF8IOzMCRRGhb3Fk=
+github.com/imgk/divert-go v0.0.0-20220205193416-faaa83c2c10a/go.mod h1:8j670dnMAWuHP3AHj7Zd8b4HhGw4mdTo8aYhCWNsAeU=
 golang.org/x/net v0.21.0 h1:AQyQV4dYCvJ7vGmJyKki9+PBdyvhkSd8EIx/qb0AYv4=
 golang.org/x/net v0.21.0/go.mod h1:bIjVDfnllIU7BJ2DNgfnXvpSvtn8VRwhlsaeUTyUS44=
 golang.org/x/sys v0.17.0 h1:25cE3gD+tdBA7lp7QfhuV+rJiE9YXTcS3VG1SqssI/Y=

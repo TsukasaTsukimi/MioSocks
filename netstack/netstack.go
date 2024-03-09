@@ -6,7 +6,7 @@ import (
 	"github.com/TsukasaTsukimi/MioSocks/tun"
 	"github.com/TsukasaTsukimi/MioSocks/tun/core"
 	"github.com/TsukasaTsukimi/MioSocks/tun/core/device"
-	T "github.com/TsukasaTsukimi/MioSocks/tun/core/device/tun"
+	T "github.com/TsukasaTsukimi/MioSocks/tun/core/device/windivert"
 	"github.com/TsukasaTsukimi/MioSocks/tun/core/option"
 	"gvisor.dev/gvisor/pkg/tcpip"
 	"gvisor.dev/gvisor/pkg/tcpip/network/ipv4"
@@ -38,12 +38,7 @@ func (ns *TunNetstack) Start() (err error) {
 		return errors.New("tun netstack is running")
 	}
 	// create tun device
-	if ns.tunDevice, err = T.Open(ns.tunCfg.Name, ns.tunCfg.MTU); err != nil {
-		return
-	}
-
-	// setup ip address for tun device
-	if err = tun.SetTunAddress(ns.tunCfg.Name, ns.tunCfg.Addr, ns.tunCfg.MTU); err != nil {
+	if ns.tunDevice, err = T.Open("outbound"); err != nil {
 		return
 	}
 
