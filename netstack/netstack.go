@@ -3,10 +3,9 @@ package netstack
 import (
 	"errors"
 
-	"github.com/TsukasaTsukimi/MioSocks/tun"
 	"github.com/TsukasaTsukimi/MioSocks/tun/core"
 	"github.com/TsukasaTsukimi/MioSocks/tun/core/device"
-	T "github.com/TsukasaTsukimi/MioSocks/tun/core/device/windivert"
+	"github.com/TsukasaTsukimi/MioSocks/tun/core/device/windivert"
 	"github.com/TsukasaTsukimi/MioSocks/tun/core/option"
 	"gvisor.dev/gvisor/pkg/tcpip"
 	"gvisor.dev/gvisor/pkg/tcpip/network/ipv4"
@@ -20,14 +19,12 @@ import (
 type TunNetstack struct {
 	netstack  *stack.Stack
 	tunDevice device.Device
-	tunCfg    tun.TunConfig
 	handler   *tunTransportHandler
 	running   bool
 }
 
-func New(tunCfg tun.TunConfig) *TunNetstack {
+func New() *TunNetstack {
 	return &TunNetstack{
-		tunCfg:  tunCfg,
 		handler: newTunTransportHandler(),
 		running: false,
 	}
@@ -38,9 +35,14 @@ func (ns *TunNetstack) Start() (err error) {
 		return errors.New("tun netstack is running")
 	}
 	// create tun device
-	if ns.tunDevice, err = T.Open("outbound"); err != nil {
+	if ns.tunDevice, err = windivert.Open("true"); err != nil {
 		return
 	}
+
+	// setup ip address for tun device
+	// if err = tun.SetTunAddress(ns.tunCfg.Name, ns.tunCfg.Addr, ns.tunCfg.MTU); err != nil {
+	// 	return
+	// }
 
 	ns.handler.run()
 

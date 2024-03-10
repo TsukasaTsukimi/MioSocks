@@ -8,7 +8,6 @@ import (
 	"syscall"
 
 	"github.com/TsukasaTsukimi/MioSocks/netstack"
-	"github.com/TsukasaTsukimi/MioSocks/tun"
 )
 
 type myHandler struct{}
@@ -23,11 +22,7 @@ func (*myHandler) HandleUDPConn(info *netstack.ConnTuple, conn net.PacketConn) {
 }
 
 func main() {
-	nt := netstack.New(tun.TunConfig{
-		Name: "tun2",
-		Addr: "192.18.0.1/16",
-		MTU:  tun.DefaultMTU,
-	})
+	nt := netstack.New()
 	if err := nt.Start(); err != nil {
 		log.Fatal(err)
 	}

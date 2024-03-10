@@ -34,6 +34,12 @@ func Open(filter string) (_ device.Device, err error) {
 		name:   "windivert",
 	}
 
+	ep, err := iobased.New(d, 65575, 0)
+	if err != nil {
+		return nil, fmt.Errorf("create endpoint: %w", err)
+	}
+	d.Endpoint = ep
+
 	return d, nil
 }
 
@@ -45,7 +51,6 @@ func (d *DIVERT) Read(packet []byte) (int, error) {
 
 func (d *DIVERT) Write(packet []byte) (int, error) {
 	address := divert.Address{}
-	divert.CalcChecksums(packet, &address, 0)
 	n, err := d.handle.Send(packet, &address)
 	return int(n), err
 }

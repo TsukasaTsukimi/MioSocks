@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var DefaultMTU uint32 = 1350
+var DefaultMTU uint32 = 65535
 
 type IPRoute struct {
 	Dest    netip.Prefix
