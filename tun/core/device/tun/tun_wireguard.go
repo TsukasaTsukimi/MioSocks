@@ -3,8 +3,8 @@ package tun
 import (
 	"fmt"
 
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/device"
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/device/iobased"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/device"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/device/iobased"
 
 	"golang.zx2c4.com/wireguard/tun"
 )

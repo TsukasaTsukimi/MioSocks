@@ -1,10 +1,10 @@
 package core
 
 import (
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/option"
 	"gvisor.dev/gvisor/pkg/tcpip"
 	"gvisor.dev/gvisor/pkg/tcpip/header"
 	"gvisor.dev/gvisor/pkg/tcpip/stack"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/option"
 )
 
 func WithRouteTable(nicID tcpip.NICID) option.Option {

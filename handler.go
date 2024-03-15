@@ -1,11 +1,11 @@
-package netstack
+package netstackgo
 
 import (
 	"net"
 	"net/netip"
 	"strconv"
 
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/adapter"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/adapter"
 
 	"gvisor.dev/gvisor/pkg/tcpip/stack"
 )

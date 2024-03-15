@@ -3,14 +3,14 @@ package core
 import (
 	"time"
 
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/adapter"
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/option"
 	"gvisor.dev/gvisor/pkg/tcpip"
 	"gvisor.dev/gvisor/pkg/tcpip/adapters/gonet"
 	"gvisor.dev/gvisor/pkg/tcpip/header"
 	"gvisor.dev/gvisor/pkg/tcpip/stack"
 	"gvisor.dev/gvisor/pkg/tcpip/transport/tcp"
 	"gvisor.dev/gvisor/pkg/waiter"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/adapter"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/option"
 )
 
 const (

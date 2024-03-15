@@ -1,12 +1,9 @@
-package netstack
+package netstackgo
 
 import (
 	"errors"
+	"net/netip"
 
-	"github.com/TsukasaTsukimi/MioSocks/tun/core"
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/device"
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/device/windivert"
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/option"
 	"gvisor.dev/gvisor/pkg/tcpip"
 	"gvisor.dev/gvisor/pkg/tcpip/network/ipv4"
 	"gvisor.dev/gvisor/pkg/tcpip/network/ipv6"
@@ -14,17 +11,35 @@ import (
 	"gvisor.dev/gvisor/pkg/tcpip/transport/icmp"
 	"gvisor.dev/gvisor/pkg/tcpip/transport/tcp"
 	"gvisor.dev/gvisor/pkg/tcpip/transport/udp"
+	"github.com/TsukasaTsukimi/netstackgo/tun"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/device"
+	T "github.com/TsukasaTsukimi/netstackgo/tun/core/device/tun"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/option"
 )
+
+var defaultCIDRRoutes = []string{
+	"1.0.0.0/8",
+	"2.0.0.0/7",
+	"4.0.0.0/6",
+	"8.0.0.0/5",
+	"16.0.0.0/4",
+	"32.0.0.0/3",
+	"64.0.0.0/2",
+	"128.0.0.0/1",
+}
 
 type TunNetstack struct {
 	netstack  *stack.Stack
 	tunDevice device.Device
+	tunCfg    tun.TunConfig
 	handler   *tunTransportHandler
 	running   bool
 }
 
-func New() *TunNetstack {
+func New(tunCfg tun.TunConfig) *TunNetstack {
 	return &TunNetstack{
+		tunCfg:  tunCfg,
 		handler: newTunTransportHandler(),
 		running: false,
 	}
@@ -35,14 +50,28 @@ func (ns *TunNetstack) Start() (err error) {
 		return errors.New("tun netstack is running")
 	}
 	// create tun device
-	if ns.tunDevice, err = windivert.Open("true"); err != nil {
+	if ns.tunDevice, err = T.Open(ns.tunCfg.Name, ns.tunCfg.MTU); err != nil {
 		return
 	}
 
 	// setup ip address for tun device
-	// if err = tun.SetTunAddress(ns.tunCfg.Name, ns.tunCfg.Addr, ns.tunCfg.MTU); err != nil {
-	// 	return
-	// }
+	if err = tun.SetTunAddress(ns.tunCfg.Name, ns.tunCfg.Addr, ns.tunCfg.MTU); err != nil {
+		return
+	}
+
+	tunSubnet := netip.MustParsePrefix(ns.tunCfg.Addr)
+	var routes []tun.IPRoute
+	for _, cidr := range defaultCIDRRoutes {
+		routes = append(routes, tun.IPRoute{
+			Dest:    netip.MustParsePrefix(cidr),
+			Gateway: tunSubnet.Addr(), // redirect to tun device
+		})
+	}
+
+	// setup local route table
+	if err = tun.AddTunRoutes(ns.tunCfg.Name, routes); err != nil {
+		return
+	}
 
 	ns.handler.run()
 

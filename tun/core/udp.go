@@ -1,8 +1,8 @@
 package core
 
 import (
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/adapter"
-	"github.com/TsukasaTsukimi/MioSocks/tun/core/option"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/adapter"
+	"github.com/TsukasaTsukimi/netstackgo/tun/core/option"
 
 	"gvisor.dev/gvisor/pkg/tcpip/adapters/gonet"
 	"gvisor.dev/gvisor/pkg/tcpip/stack"
