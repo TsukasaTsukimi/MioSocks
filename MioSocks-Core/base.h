@@ -3,9 +3,9 @@
 #include <iostream>
 #include <thread>
 #include <winsock2.h>
-#include "windivert.h"
+#include "../WinDivert/windivert.h"
 
-#pragma comment(lib,"WinDivert.lib")
+#pragma comment(lib,"../WinDivert/WinDivert.lib")
 #pragma comment(lib,"Ws2_32.lib")
 
 struct NetTuple

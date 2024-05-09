@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\MioSocks-Core\socks5.h" />
+    <ClInclude Include="socks5.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\MioSocks-Core\socks5.cpp" />
+    <ClCompile Include="socks5.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
