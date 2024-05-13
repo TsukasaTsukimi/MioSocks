@@ -1,9 +1,7 @@
 #include "base.h"
-#include "tcp-proxy.h"
+#include "NetworkLayer.h"
 #include "tcp2socks.h"
 #include "SocketLayer.h"
-
-NetTuple M[65536];
 
 int main()
 {

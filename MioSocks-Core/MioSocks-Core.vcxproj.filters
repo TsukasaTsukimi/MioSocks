@@ -18,7 +18,7 @@
     <ClCompile Include="tcp2socks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tcp-proxy.cpp">
+    <ClCompile Include="NetworkLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -35,7 +35,7 @@
     <ClInclude Include="tcp2socks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tcp-proxy.h">
+    <ClInclude Include="NetworkLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SocketLayer.h">

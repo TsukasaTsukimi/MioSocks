@@ -1,26 +1,23 @@
-#include "tcp-proxy.h"
+#include "NetworkLayer.h"
 
 const int MAXBUF = 65536;
 
-char packet[MAXBUF];    // Packet buffer
-UINT packetLen;
+void pend_syn(HANDLE handle, UINT16 local_port, UINT8* packet, UINT32 packet_len, WINDIVERT_ADDRESS* addr)
+{
+	SYN* syn = (SYN*)malloc(sizeof(SYN) + packet_len);
+	if (syn == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+}
 
 int TCP_Proxy_Process()
 {
 	
 	HANDLE handle;          // WinDivert handle
-	WINDIVERT_ADDRESS addr; // Packet address
-	
-	PWINDIVERT_IPHDR ip_header;
-	PWINDIVERT_TCPHDR tcp_header;
-
-	UINT32 target;
-	UINT32 proxy;
-	WinDivertHelperParseIPv4Address("5.87.181.107", &target);
-	WinDivertHelperParseIPv4Address("1.0.0.127", &proxy);
 
 	// Open some filter
-	handle = WinDivertOpen("tcp", WINDIVERT_LAYER_NETWORK, 0, 0);
+	handle = WinDivertOpen("tcp and localAddr != :: and remoteAddr != ::", WINDIVERT_LAYER_NETWORK, 0, 0);
 	if (handle == INVALID_HANDLE_VALUE)
 	{
 		// Handle error
@@ -30,6 +27,12 @@ int TCP_Proxy_Process()
 	// Main capture-modify-inject loop:
 	while (TRUE)
 	{
+		static char packet[MAXBUF];    // Packet buffer
+		static UINT packetLen;
+
+		WINDIVERT_ADDRESS	addr; // Packet address
+		PWINDIVERT_IPHDR	ip_header;
+		PWINDIVERT_TCPHDR	tcp_header;
 		if (!WinDivertRecv(handle, packet, sizeof(packet), &packetLen, &addr))
 		{
 			// Handle recv error
@@ -53,7 +56,7 @@ int TCP_Proxy_Process()
 				printf("[<-]%u:%u %u:%u\n", ip_header->SrcAddr, htons(tcp_header->SrcPort), ip_header->DstAddr, htons(tcp_header->DstPort));
 				UINT32 dst_addr = ip_header->DstAddr;
 				UINT16 dst_port = ntohs(tcp_header->DstPort);
-				tcp_header->SrcPort = htons(M[dst_port].DstPort);
+				tcp_header->SrcPort = htons(conns[dst_port].DstPort);
 				ip_header->DstAddr = ip_header->SrcAddr;
 				ip_header->SrcAddr = dst_addr;
 				addr.Outbound = FALSE;

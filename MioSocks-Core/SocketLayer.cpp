@@ -10,95 +10,182 @@
 
 #define INET6_ADDRSTRLEN    45
 
+Connection conns[UINT16_MAX + 1];
+
+void handle_syn(HANDLE handle, Connection *conn)
+{
+	SYN* syn = conn->syn;
+	PWINDIVERT_IPHDR ip_header = NULL;
+	PWINDIVERT_TCPHDR tcp_header = NULL;
+	if (syn == NULL)
+	{
+		return;
+	}
+	WinDivertHelperParsePacket(
+		syn->packet, 
+		syn->packet_len, 
+		&ip_header, 
+		NULL, 
+		NULL, 
+		NULL, 
+		NULL, 
+		&tcp_header, 
+		NULL, 
+		NULL, 
+		NULL, 
+		NULL, 
+		NULL
+	);
+	if (ip_header == NULL || tcp_header == NULL)
+	{
+		free(syn);
+		return;
+	}
+	
+	switch (conn->state)
+	{
+	case STATE_WHITELISTED:
+	{
+		syn->addr.Outbound = TRUE;
+		WinDivertHelperCalcChecksums(syn->packet, syn->packet_len, &syn->addr, 0);
+		if (!WinDivertSend(handle, syn->packet, syn->packet_len, NULL, &syn->addr))
+		{
+			// Handle send error
+		}
+		free(syn);
+		break;
+	}
+	case STATE_SYN_WAIT:
+	{
+		conn->SrcAddr = ip_header->SrcAddr;
+		conn->SrcPort = tcp_header->SrcPort;
+		conn->DstAddr = ip_header->DstAddr;
+		conn->DstPort = tcp_header->DstPort;
+
+		UINT32 dst_addr = ip_header->DstAddr;
+		tcp_header->DstPort = htons(2805);
+		ip_header->DstAddr = ip_header->SrcAddr;
+		ip_header->SrcAddr = dst_addr;
+
+		printf("[SOCKET] [CONNECT] %u:%u %u:%u\n", conn->SrcAddr, conn->SrcPort, conn->DstAddr, conn->DstPort);
+
+		syn->addr.Outbound = FALSE;
+		WinDivertHelperCalcChecksums(syn->packet, syn->packet_len, &syn->addr, 0);
+		if (!WinDivertSend(handle, syn->packet, syn->packet_len, NULL, &syn->addr))
+		{
+			// Handle send error
+		}
+		free(syn);
+		break;
+	}
+	}
+}
+
+// Pend a CONNECT:
+void pend_connect(HANDLE handle, UINT16 local_port, UINT8 state)
+{
+	Connection *conn = &conns[local_port];
+	switch (conn->state)
+	{
+	case STATE_NOT_CONNECTED:
+	case STATE_FIN_WAIT:
+		conn->state = state;
+		handle_syn(handle, conn);
+		break;
+	default:
+		break;
+	}
+}
+
 void Socket_Layer_Process()
 {
+	HANDLE handle;          // WinDivert socket handle
+	HANDLE inject;			// WinDivert network handle
+	HANDLE process;
+	DWORD path_len;
 
-	HANDLE handle;          // WinDivert handle
-    HANDLE process;
-    DWORD path_len;
-	WINDIVERT_ADDRESS addr; // Packet address
-
-    char path[MAX_PATH + 1];
-    char local_str[INET6_ADDRSTRLEN + 1], remote_str[INET6_ADDRSTRLEN + 1];
-    char* filename;
+	char path[MAX_PATH];
+	char* filename;
 
 	// Open some filter
-	handle = WinDivertOpen("tcp", WINDIVERT_LAYER_SOCKET, 1121, WINDIVERT_FLAG_SNIFF | WINDIVERT_FLAG_RECV_ONLY);
-	if (handle == INVALID_HANDLE_VALUE)
+	handle = WinDivertOpen(
+		"tcp and (event == CONNECT or event == CLOSE) and localAddr != :: and remoteAddr != ::", 
+		WINDIVERT_LAYER_SOCKET, 
+		11234, 
+		WINDIVERT_FLAG_SNIFF | WINDIVERT_FLAG_RECV_ONLY
+	);
+	inject = WinDivertOpen(
+		"false",
+		WINDIVERT_LAYER_NETWORK,
+		1751,
+		WINDIVERT_FLAG_SEND_ONLY
+	);
+	if (handle == INVALID_HANDLE_VALUE || inject == INVALID_HANDLE_VALUE)
 	{
 		// Handle error
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 
 	// Main capture-modify-inject loop:
 	while (TRUE)
 	{
+		// Packet address
+		WINDIVERT_ADDRESS addr;
 		if (!WinDivertRecv(handle, NULL, 0, NULL, &addr))
 		{
 			// Handle recv error
 			continue;
 		}
 
-        if (addr.IPv6 == 1)
-            continue;
-        if (addr.Event != WINDIVERT_EVENT_SOCKET_CONNECT)
-            continue;
-        if (addr.Socket.Protocol != IPPROTO_TCP)
-            continue;
+		/*printf(" pid=");
+		printf("%u", addr.Socket.ProcessId);
 
-        /*printf(" pid=");
-        printf("%u", addr.Socket.ProcessId);
+		printf(" program=");*/
+		process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE,
+			addr.Socket.ProcessId);
+		path_len = 0;
+		if (process != NULL)
+		{
+			path_len = GetProcessImageFileNameA(process, path, sizeof(path));
+			CloseHandle(process);
+		}
+		if (path_len != 0)
+		{
+			filename = PathFindFileNameA(path);
+			/*printf("%s", filename);*/
+		}
 
-        printf(" program=");*/
-        process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE,
-            addr.Socket.ProcessId);
-        path_len = 0;
-        if (process != NULL)
-        {
-            path_len = GetProcessImageFileNameA(process, path, sizeof(path));
-            CloseHandle(process);
-        }
-        if (path_len != 0)
-        {
-            filename = PathFindFileNameA(path);
-            /*printf("%s", filename);*/
-        }
-        /*else if (addr.Socket.ProcessId == 4)
-        {
-            printf("Windows");
-        }
-        else
-        {
-            printf("???");
-        }
+		UINT16 local_port = htons(addr.Socket.LocalPort);
+		switch (addr.Event)
+		{
+		case WINDIVERT_EVENT_SOCKET_CONNECT:
+		{
+			if (strcmp(filename, "Chrome.exe") == 0)
+			{
+				pend_connect(inject, local_port, STATE_SYN_WAIT);
+			}
+			else
+			{
+				pend_connect(inject, local_port, STATE_WHITELISTED);
+			}
+			break;
+		}
+		case WINDIVERT_EVENT_SOCKET_CLOSE:
+			Connection* conn = &conns[local_port];
+			SYN* syn = conn->syn;
+			if (conn->state == STATE_NOT_CONNECTED ||
+				conn->state == STATE_FIN_WAIT)
+			{
+				/* Connection Closed */
+				continue;
+			}
 
-        printf(" endpoint=");
-        printf("%llu", addr.Socket.EndpointId);
+			printf("[SOCKET] [CLOSE] %u:%u %u:%u\n", conn->SrcAddr, conn->SrcPort, conn->DstAddr, conn->DstPort);
 
-        printf(" parent=");
-        printf("%llu", addr.Socket.ParentEndpointId);*/
-
-        WinDivertHelperFormatIPv6Address(addr.Socket.LocalAddr, local_str,
-            sizeof(local_str));
-        /*if (addr.Socket.LocalPort != 0 || strcmp(local_str, "::") != 0)
-        {
-            printf(" local=");
-            printf("[%s]:%u", local_str, addr.Socket.LocalPort);
-        }*/
-
-        WinDivertHelperFormatIPv6Address(addr.Socket.RemoteAddr, remote_str,
-            sizeof(remote_str));
-        /*if (addr.Socket.RemotePort != 0 || strcmp(remote_str, "::") != 0)
-        {
-            printf(" remote=");
-            printf("[%s]:%u", remote_str, addr.Socket.RemotePort);
-        }*/
-        if (path_len != 0)
-        {
-            printf("[Socket] %s %u:%u %u:%u\n", filename, addr.Socket.LocalAddr, addr.Socket.LocalPort, addr.Socket.RemoteAddr, addr.Socket.RemotePort);
-            strcpy(M[addr.Socket.LocalPort].ProcessName, filename);
-        }
-
-        /*putchar('\n');*/
+			free(syn);
+			conn->state = STATE_FIN_WAIT;
+			conn->syn = NULL;
+			break;
+		}
 	}
 }

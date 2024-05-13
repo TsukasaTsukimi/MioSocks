@@ -129,13 +129,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SocketLayer.cpp" />
-    <ClCompile Include="tcp-proxy.cpp" />
+    <ClCompile Include="NetworkLayer.cpp" />
     <ClCompile Include="tcp2socks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h" />
     <ClInclude Include="SocketLayer.h" />
-    <ClInclude Include="tcp-proxy.h" />
+    <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="tcp2socks.h" />
     <ClInclude Include="windivert.h" />
   </ItemGroup>
