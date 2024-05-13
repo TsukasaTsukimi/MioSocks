@@ -38,7 +38,7 @@ struct SYN
 
 struct Connection
 {
-    UINT8 state;
+    State state;
     UINT32 SrcAddr;
     UINT16 SrcPort;
     UINT32 DstAddr;

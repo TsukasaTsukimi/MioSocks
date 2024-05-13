@@ -82,7 +82,7 @@ void handle_syn(HANDLE handle, Connection *conn)
 }
 
 // Pend a CONNECT:
-void pend_connect(HANDLE handle, UINT16 local_port, UINT8 state)
+void pend_connect(HANDLE handle, UINT16 local_port, State state)
 {
 	Connection *conn = &conns[local_port];
 	switch (conn->state)

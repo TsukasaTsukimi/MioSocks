@@ -2,13 +2,22 @@
 
 const int MAXBUF = 65536;
 
-void pend_syn(HANDLE handle, UINT16 local_port, UINT8* packet, UINT32 packet_len, WINDIVERT_ADDRESS* addr)
+void pend_syn(HANDLE handle, UINT16 local_port, char* packet, UINT32 packet_len, WINDIVERT_ADDRESS* addr)
 {
 	SYN* syn = (SYN*)malloc(sizeof(SYN) + packet_len);
 	if (syn == NULL)
 	{
 		exit(EXIT_FAILURE);
 	}
+	memcpy(&syn->addr, addr, sizeof(syn->addr));
+	syn->packet_len = packet_len;
+	memcpy(syn->packet, packet, packet_len);
+
+	Connection* conn = &conns[local_port];
+	SYN* old_syn = conn->syn;
+	conn->syn = syn;
+	handle_syn(handle, conn);
+	free(old_syn);
 }
 
 int TCP_Proxy_Process()
@@ -49,6 +58,11 @@ int TCP_Proxy_Process()
 			continue;
 		}
 
+		UINT32 srcaddr = ip_header->SrcAddr;
+		UINT16 srcport = tcp_header->SrcPort;
+		UINT32 dstaddr = ip_header->DstAddr;
+		UINT16 dstport = tcp_header->DstPort;
+
 		if (ip_header->Version == 4)
 		{
 			if (tcp_header->SrcPort == htons(2805))
@@ -61,17 +75,12 @@ int TCP_Proxy_Process()
 				ip_header->SrcAddr = dst_addr;
 				addr.Outbound = FALSE;
 			}
-			else if (/*ip_header->DstAddr == target && */
-				tcp_header->DstPort == htons(443) || tcp_header->DstPort == htons(80)
-				)
+			else if (conns[srcport].state == STATE_NOT_CONNECTED)
 			{
-				UINT32 srcaddr = ip_header->SrcAddr;
-				UINT16 srcport = ntohs(tcp_header->SrcPort);
-				UINT32 dstaddr = ip_header->DstAddr;
-				UINT16 dstport = ntohs(tcp_header->DstPort);
-				M[srcport] = { srcaddr, srcport, dstaddr, dstport };
-				printf("[->]%s %u:%u %u:%u\n", M[srcport].ProcessName, srcaddr, srcport, dstaddr, dstport);
-
+				pend_syn(handle, srcport, packet, packetLen, &addr);
+			}
+			else if(conns[srcport].state == STATE_SYN_WAIT)
+			{
 				UINT32 dst_addr = ip_header->DstAddr;
 				tcp_header->DstPort = htons(2805);
 				ip_header->DstAddr = ip_header->SrcAddr;
