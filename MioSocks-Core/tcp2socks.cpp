@@ -45,9 +45,9 @@ static void process(SOCKET client, UINT32 addr, UINT16 port)
     struct sockaddr_in clientService;
     clientService.sin_family = AF_INET;
     //inet_pton(AF_INET, "107.181.87.5", &(clientService.sin_addr));
-    clientService.sin_addr.S_un.S_addr = M[port].DstAddr;
-    clientService.sin_port = htons(M[port].DstPort);
-    printf("SOCKS5: %u:%u\n", M[port].DstAddr, M[port].DstPort);
+    clientService.sin_addr.S_un.S_addr = conns[port].DstAddr;
+    clientService.sin_port = htons(conns[port].DstPort);
+    printf("SOCKS5: %u:%u\n", conns[port].DstAddr, conns[port].DstPort);
     int iResult = socks5.Connect(target, &clientService, sizeof(clientService));
     if (iResult == SOCKET_ERROR) {
         wprintf(L"connect failed with error: %d\n", WSAGetLastError());

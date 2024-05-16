@@ -59,28 +59,30 @@ int TCP_Proxy_Process()
 		}
 
 		UINT32 srcaddr = ip_header->SrcAddr;
-		UINT16 srcport = tcp_header->SrcPort;
+		UINT16 srcport = ntohs(tcp_header->SrcPort);
 		UINT32 dstaddr = ip_header->DstAddr;
-		UINT16 dstport = tcp_header->DstPort;
+		UINT16 dstport = ntohs(tcp_header->DstPort);
 
 		if (ip_header->Version == 4)
 		{
 			if (tcp_header->SrcPort == htons(2805))
 			{
-				printf("[<-]%u:%u %u:%u\n", ip_header->SrcAddr, htons(tcp_header->SrcPort), ip_header->DstAddr, htons(tcp_header->DstPort));
+				printf("[<-]%u:%u %u:%u\n", srcaddr, srcport, dstaddr, dstport);
+
 				UINT32 dst_addr = ip_header->DstAddr;
-				UINT16 dst_port = ntohs(tcp_header->DstPort);
-				tcp_header->SrcPort = htons(conns[dst_port].DstPort);
+				tcp_header->SrcPort = htons(conns[dstport].DstPort);
 				ip_header->DstAddr = ip_header->SrcAddr;
 				ip_header->SrcAddr = dst_addr;
 				addr.Outbound = FALSE;
 			}
-			else if (conns[srcport].state == STATE_NOT_CONNECTED)
+			else if (dstport == 8484 || dstport == 8585 || dstport == 8586)
 			{
-				pend_syn(handle, srcport, packet, packetLen, &addr);
-			}
-			else if(conns[srcport].state == STATE_SYN_WAIT)
-			{
+				printf("[->]%u:%u %u:%u\n", srcaddr, srcport, dstaddr, dstport);
+				conns[srcport].SrcAddr = srcaddr;
+				conns[srcport].SrcPort = srcport;
+				conns[srcport].DstAddr = dstaddr;
+				conns[srcport].DstPort = dstport;
+				
 				UINT32 dst_addr = ip_header->DstAddr;
 				tcp_header->DstPort = htons(2805);
 				ip_header->DstAddr = ip_header->SrcAddr;
