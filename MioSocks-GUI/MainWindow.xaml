@@ -7,6 +7,39 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <TabControl TabStripPlacement="Left">
+            <TabItem Header="General">
+                <Grid x:Name="General_Grid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="89*"/>
+                        <RowDefinition Height="68*"/>
+                        <RowDefinition Height="57*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Configuration">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="26*"/>
+                                <ColumnDefinition Width="268*"/>
+                                <ColumnDefinition Width="57*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="35*"/>
+                                <RowDefinition Height="35*"/>
+                                <RowDefinition Height="42*"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Server" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,10,10,10"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Mode" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,10,10,10"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Profiles" Grid.Row="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings">
+            </TabItem>
+            <TabItem Header="Subscription"/>
+        </TabControl>
+
     </Grid>
 </Window>

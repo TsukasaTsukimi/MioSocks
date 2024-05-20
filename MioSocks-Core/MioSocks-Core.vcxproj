@@ -137,7 +137,6 @@
     <ClInclude Include="SocketLayer.h" />
     <ClInclude Include="NetworkLayer.h" />
     <ClInclude Include="tcp2socks.h" />
-    <ClInclude Include="windivert.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\socks5\socks5.vcxproj">

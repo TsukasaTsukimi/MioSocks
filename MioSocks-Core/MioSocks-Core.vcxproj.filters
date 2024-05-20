@@ -29,9 +29,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="windivert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="tcp2socks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
