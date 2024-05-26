@@ -44,7 +44,6 @@
     <Compile Include="ModeInterface.cs" />
     <Compile Include="ServerInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubscribeInterface.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

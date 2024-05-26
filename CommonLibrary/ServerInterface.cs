@@ -10,6 +10,8 @@ namespace CommonLibrary
     {
         string GetType();
         string Edit(string json);
-        List<Dictionary<string, Func<string>>> MethodList();
+        string AddServer();
+        string Parse(string url);
+        void Run(string json);
     }
 }
