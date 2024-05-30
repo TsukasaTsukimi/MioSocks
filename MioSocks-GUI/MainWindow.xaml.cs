@@ -40,17 +40,22 @@ namespace MioSocks_GUI
 				}
 			);
 			Subscribe.Write();
+			Subscription_Link_TextBox.Text = "";
         }
 
 		private void Subscription_Delete_Click(object sender, RoutedEventArgs e)
 		{
-            var selectedItems = Subscription_DataGrid.SelectedItems;
-            if (Subscription_DataGrid.SelectedIndex != -1)
-            {
-                for (int i = selectedItems.Count - 1; i >= 0; i--)
-                    Subscribe.subscribelist.Remove((SubscribeData)selectedItems[i]);
+			var selectedItems = Subscription_DataGrid.SelectedItems.Cast<SubscribeData>().ToList();
+			foreach(SubscribeData sub in selectedItems) 
+			{
+                Subscribe.subscribelist.Remove(sub);
             }
             Subscribe.Write();
         }
-	}
+
+        private void SubScription_Refresh_Click(object sender, RoutedEventArgs e)
+        {
+			Subscribe.GetServer();
+        }
+    }
 }
