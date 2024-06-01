@@ -31,7 +31,7 @@
                                 <RowDefinition Height="50*"/>
                             </Grid.RowDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Content="Server" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,5,0,5" Padding="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                            <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,10,10,10" Padding="10,0,10,0"/>
+                            <ComboBox x:Name="General_Server_ComboBox" Grid.Row="0" Grid.Column="1" Margin="10,10,10,10" Padding="10,0,10,0"/>
                             <Label Grid.Row="1" Grid.Column="0" Content="Mode" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,5,0,5" Padding="0,0,0,0" />
                             <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,10,10,10"/>
                             <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="🖊" Padding="0,0,0,0" Margin="5,5,5,5"/>

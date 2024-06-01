@@ -3,15 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace CommonLibrary
 {
-    internal interface ServerInterface
-    {
-        string GetType();
-        string Edit(string json);
-        string AddServer();
-        string Parse(string url);
-        void Run(string json);
-    }
+	public class ServerData
+	{
+		public string Scheme { get; set; }
+        public string UserInfo { get; set; }
+        public string Host { get; set; }
+        public int Port { get; set; }
+		public string Query { get; set; }
+        public string Fragment { get; set; }
+        [JsonIgnore]
+		public string title { get => string.Format($"[{Scheme}]{Fragment}"); }
+        [JsonIgnore]
+        public string uri { get => string.Format($"{Scheme}://{UserInfo}@{Host}:{Port}/{Query}{Fragment}"); }
+
+        public ServerData() { }
+		public ServerData(string uriString)
+		{
+			Uri uri = new Uri(uriString);
+			Scheme = uri.Scheme;
+			Fragment = Uri.UnescapeDataString(uri.Fragment);
+			Host = uri.Host;
+			Port = uri.Port;
+			UserInfo = uri.UserInfo;
+			Query = uri.Query;
+		}
+		public virtual void Start() { }
+		public virtual void Stop() { }
+	}
 }

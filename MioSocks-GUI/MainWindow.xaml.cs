@@ -28,10 +28,17 @@ namespace MioSocks_GUI
 			/* Read Subscription List from Json File */
             Subscribe.Read();
             Subscription_DataGrid.ItemsSource = Subscribe.subscribelist;
-		}
+
+			Server.Read();
+			General_Server_ComboBox.ItemsSource = Server.serverlist;
+			General_Server_ComboBox.DisplayMemberPath = "title";
+
+        }
 
 		private void Subscription_Add_Click(object sender, RoutedEventArgs e)
 		{
+			if (Subscription_Link_TextBox.Text == "")
+				return;
             Subscribe.subscribelist.Add(
 				new SubscribeData
 				{
@@ -45,6 +52,8 @@ namespace MioSocks_GUI
 
 		private void Subscription_Delete_Click(object sender, RoutedEventArgs e)
 		{
+			if (Subscription_DataGrid.SelectedItems.Count == 0)
+				return;
 			var selectedItems = Subscription_DataGrid.SelectedItems.Cast<SubscribeData>().ToList();
 			foreach(SubscribeData sub in selectedItems) 
 			{

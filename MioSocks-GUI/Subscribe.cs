@@ -1,10 +1,13 @@
 ﻿using HandyControl.Controls;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
 
 namespace MioSocks_GUI
 {
@@ -18,8 +21,8 @@ namespace MioSocks_GUI
 
 	public static class Subscribe
 	{
-		public static SubscribeList subscribelist = new SubscribeList();
-		static string filepath = "Subscribe.json";
+        static string filepath = "Subscribe.json";
+        public static SubscribeList subscribelist = new SubscribeList();
 		public static void Read()
 		{
 			try
@@ -61,27 +64,13 @@ namespace MioSocks_GUI
                 StreamReader streamreader = new StreamReader(datastream);
 				string server = streamreader.ReadToEnd();
 				MessageBox.Show(server);
-				string list = DecodeBase64(server);
-				using(StreamWriter streamwriter = new StreamWriter("test.txt"))
-				{
-					streamwriter.Write(list);
-				}
+				string list = Base64.DecodeBase64(server);
+				Server.Parse(list);
             }
 			catch(IOException e)
 			{
 				MessageBox.Show(e.Message);
 			}
 		}
-
-        public static string DecodeBase64(string val)
-        {
-            return Encoding.UTF8.GetString(DecodeBase64ToBytes(val));
-        }
-
-        public static byte[] DecodeBase64ToBytes(string val)
-        {
-            var data = val.PadRight(val.Length + (4 - val.Length % 4) % 4, '=');
-            return Convert.FromBase64String(data);
-        }
     }
 }
