@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using CommonLibrary;
 
 namespace MioSocks_GUI
 {
@@ -55,7 +56,7 @@ namespace MioSocks_GUI
 
 		public static void GetServer()
 		{
-			var website = subscribelist[0].Link;
+			var website = subscribelist[1].Link;
 			try
 			{
                 WebRequest request = WebRequest.Create(website);

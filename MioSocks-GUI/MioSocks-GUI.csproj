@@ -61,7 +61,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Base64.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Subscribe.cs" />
     <Page Include="MainWindow.xaml">
@@ -108,6 +107,10 @@
     <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj">
       <Project>{015debae-9710-4051-8616-142d30cd5373}</Project>
       <Name>CommonLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shadowsocks\Shadowsocks.csproj">
+      <Project>{900bfcd1-32ad-4baf-9a5d-cc098d795168}</Project>
+      <Name>Shadowsocks</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

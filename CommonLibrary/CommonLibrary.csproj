@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonLibrary.cs" />
     <Compile Include="ModeInterface.cs" />
     <Compile Include="ServerInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

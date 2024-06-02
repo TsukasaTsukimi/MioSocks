@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonLibrary;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Shadowsocks;
+using HandyControl.Tools.Extension;
 
 namespace MioSocks_GUI
 {
@@ -35,7 +38,12 @@ namespace MioSocks_GUI
 
         }
 
-		private void Subscription_Add_Click(object sender, RoutedEventArgs e)
+        private void MioSocks_Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Subscription_Add_Click(object sender, RoutedEventArgs e)
 		{
 			if (Subscription_Link_TextBox.Text == "")
 				return;
@@ -65,6 +73,12 @@ namespace MioSocks_GUI
         private void SubScription_Refresh_Click(object sender, RoutedEventArgs e)
         {
 			Subscribe.GetServer();
+        }
+
+        private void General_Start_Button_Click(object sender, RoutedEventArgs e)
+        {
+			Shadowsocks.ShadowsocksWindow a = new Shadowsocks.ShadowsocksWindow();
+			a.Show();
         }
     }
 }
