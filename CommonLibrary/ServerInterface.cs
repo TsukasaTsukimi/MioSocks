@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace CommonLibrary
 {
-	public class ServerData
+	public class ServerBase
 	{
 		public string Scheme { get; set; }
         public string UserInfo { get; set; }
@@ -20,8 +20,18 @@ namespace CommonLibrary
         [JsonIgnore]
         public string uri { get => string.Format($"{Scheme}://{UserInfo}@{Host}:{Port}/{Query}{Fragment}"); }
 
-        public ServerData() { }
-		public ServerData(string uriString)
+        public ServerBase() { }
+
+        public ServerBase(ServerBase data) 
+		{
+			Scheme = data.Scheme;
+			UserInfo = data.UserInfo;
+			Host = data.Host;
+			Port = data.Port;
+			Query = data.Query;
+			Fragment = data.Fragment;
+		}
+        public ServerBase(string uriString)
 		{
 			Uri uri = new Uri(uriString);
 			Scheme = uri.Scheme;

@@ -38,11 +38,6 @@ namespace MioSocks_GUI
 
         }
 
-        private void MioSocks_Window_Closed(object sender, EventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
         private void Subscription_Add_Click(object sender, RoutedEventArgs e)
 		{
 			if (Subscription_Link_TextBox.Text == "")
@@ -77,8 +72,8 @@ namespace MioSocks_GUI
 
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
-			Shadowsocks.ShadowsocksWindow a = new Shadowsocks.ShadowsocksWindow();
-			a.Show();
+			ServerNameSpace.ServerWindow a = new ServerNameSpace.ServerWindow(Server.serverlist[0]);
+			a.ShowDialog();
         }
     }
 }

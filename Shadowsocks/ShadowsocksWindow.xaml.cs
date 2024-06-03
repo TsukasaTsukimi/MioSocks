@@ -12,22 +12,56 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CommonLibrary;
 
-namespace Shadowsocks
+namespace ServerNameSpace
 {
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class ShadowsocksWindow : Window
+    public partial class ServerWindow : Window
     {
-        public ShadowsocksWindow()
+        public ServerWindow()
         {
             InitializeComponent();
+        }
+
+        public ServerWindow(ServerBase basedata)
+        {
+            InitializeComponent();
+            ServerData data = new ServerData(basedata);
+            ServerIP_PasswordBox.Password = data.Host;
+            Port_NumericUpDown.Value = data.Port;
+            Password_PasswordBox.Password = data.password;
+            Encryption_ComboBox.Text = data.method;
+            SS_Link_TextBox.Text = data.uri;
         }
 
         private void ServerIP_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             ServerIP_PasswordBox.Visibility= Visibility.Collapsed;
+            ServerIP_TextBox.Visibility = Visibility.Visible;
+            ServerIP_TextBox.Text = ServerIP_PasswordBox.Password;
+        }
+
+        private void ServerIP_CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            ServerIP_TextBox.Visibility = Visibility.Collapsed;
+            ServerIP_PasswordBox.Visibility = Visibility.Visible;
+            ServerIP_PasswordBox.Password = ServerIP_TextBox.Text;
+        }
+        private void Password_CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Password_PasswordBox.Visibility = Visibility.Collapsed;
+            Password_TextBox.Visibility = Visibility.Visible;
+            Password_TextBox.Text = Password_PasswordBox.Password;
+        }
+
+        private void Password_CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            Password_TextBox.Visibility = Visibility.Collapsed;
+            Password_PasswordBox.Visibility = Visibility.Visible;
+            Password_PasswordBox.Password = Password_TextBox.Text;
         }
     }
 }

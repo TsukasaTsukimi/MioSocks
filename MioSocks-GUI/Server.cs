@@ -13,7 +13,7 @@ using CommonLibrary;
 namespace MioSocks_GUI
 {
 	
-	public class ServerList : ObservableCollection<ServerData> { }
+	public class ServerList : ObservableCollection<ServerBase> { }
 	public static class Server
 	{
 		static string filepath = "Server.json";
@@ -54,7 +54,7 @@ namespace MioSocks_GUI
 			{
                 try
 				{
-                    ServerData uri = new ServerData(link);
+                    ServerBase uri = new ServerBase(link);
                     serverlist.Add(uri);
                 }
 				catch(Exception e) 

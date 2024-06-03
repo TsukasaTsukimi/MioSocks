@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MioSocks_GUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="460" Width="800" Closed="MioSocks_Window_Closed">
+        Title="MainWindow" Height="460" Width="800">
     <Grid>
         <TabControl TabStripPlacement="Left">
             <TabItem Header="General">

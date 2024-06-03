@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using CommonLibrary;
 
-namespace Shadowsocks
+namespace ServerNameSpace
 {
-	public class Shadowsocks: ServerData
+	public class ServerData: ServerBase
 	{
+		public ServerData(ServerBase data) : base(data) { }
 		private string[] UserInfoList 
 		{
 			get
