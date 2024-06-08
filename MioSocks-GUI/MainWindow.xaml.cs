@@ -14,8 +14,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using System.ComponentModel;
 using Shadowsocks;
 using HandyControl.Tools.Extension;
+using System.IO;
 
 namespace MioSocks_GUI
 {
@@ -72,8 +75,26 @@ namespace MioSocks_GUI
 
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
-			ServerNameSpace.ServerWindow a = new ServerNameSpace.ServerWindow(Server.serverlist[0]);
-			a.ShowDialog();
+			try
+			{
+				using(Process p = new Process())
+				{
+					var proxy = (ServerBase)General_Server_ComboBox.SelectedItem;
+                    p.StartInfo.FileName = "sslocal.exe";
+					p.StartInfo.Arguments = String.Format("-b 127.0.0.1:2806 --server-url \"{0}\"", proxy.uri);
+					p.Start();
+                }
+			}
+			catch(Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+        }
+
+        private void General_Edit_Button_Click(object sender, RoutedEventArgs e)
+        {
+            ServerNameSpace.ServerWindow a = new ServerNameSpace.ServerWindow((ServerBase)General_Server_ComboBox.SelectedItem);
+            a.ShowDialog();
         }
     }
 }

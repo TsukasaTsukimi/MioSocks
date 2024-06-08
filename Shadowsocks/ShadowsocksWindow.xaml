@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ServerNameSpace"
              mc:Ignorable="d" 
-             Height="400" Width="800" ResizeMode="NoResize" Title="Shadowsocks" WindowStartupLocation="CenterScreen">
+             Height="430" Width="800" ResizeMode="NoResize" Title="Shadowsocks" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400*"/>
@@ -29,6 +29,7 @@
                         <ColumnDefinition Width="140*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="30*"/>
                         <RowDefinition Height="30*"/>
                         <RowDefinition Height="30*"/>
                         <RowDefinition Height="30*"/>
@@ -65,8 +66,11 @@
                     <Label Grid.Row="7" HorizontalAlignment="Right" Content="Obfs Param" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" />
                     <TextBox x:Name="Obfs_Param_TextBox" Grid.Row="7" Grid.Column="1" Margin="10,0,10,0" />
 
-                    <Label Grid.Row="8" HorizontalAlignment="Right" Content="SS Link" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" />
-                    <TextBox x:Name="SS_Link_TextBox" Grid.Row="8" Grid.Column="1" Margin="10,0,10,0" />
+                    <Label Grid.Row="8" HorizontalAlignment="Right" Content="Remark" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" />
+                    <TextBox x:Name="Remark_TextBox" Grid.Row="8" Grid.Column="1" Margin="10,0,10,0" />
+                    
+                    <Label Grid.Row="9" HorizontalAlignment="Right" Content="SS Link" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" />
+                    <TextBox x:Name="SS_Link_TextBox" Grid.Row="9" Grid.Column="1" Margin="10,0,10,0" />
                 </Grid>
             </GroupBox>
         </Grid>

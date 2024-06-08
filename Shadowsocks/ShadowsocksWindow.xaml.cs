@@ -34,6 +34,7 @@ namespace ServerNameSpace
             Port_NumericUpDown.Value = data.Port;
             Password_PasswordBox.Password = data.password;
             Encryption_ComboBox.Text = data.method;
+            Remark_TextBox.Text = data.Fragment;
             SS_Link_TextBox.Text = data.uri;
         }
 
