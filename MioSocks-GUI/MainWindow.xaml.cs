@@ -81,10 +81,18 @@ namespace MioSocks_GUI
 				{
 					var proxy = (ServerBase)General_Server_ComboBox.SelectedItem;
                     p.StartInfo.FileName = "sslocal.exe";
-					p.StartInfo.Arguments = String.Format("-b 127.0.0.1:2806 --server-url \"{0}\"", proxy.uri);
+					p.StartInfo.Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", proxy.uri);
 					p.Start();
                 }
-			}
+				System.Threading.Thread.Sleep(3000);
+                using (Process p = new Process())
+                {
+                    var proxy = (ServerBase)General_Server_ComboBox.SelectedItem;
+                    p.StartInfo.FileName = "MioSocks-Core.exe";
+					p.StartInfo.Verb = "runas";
+                    p.Start();
+                }
+            }
 			catch(Exception ex)
 			{
 				MessageBox.Show(ex.Message);
