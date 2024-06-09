@@ -19,6 +19,9 @@ using System.ComponentModel;
 using Shadowsocks;
 using HandyControl.Tools.Extension;
 using System.IO;
+using System.Threading;
+using Microsoft.Diagnostics.Tracing.Parsers;
+using Microsoft.Diagnostics.Tracing.Session;
 
 namespace MioSocks_GUI
 {
@@ -38,10 +41,6 @@ namespace MioSocks_GUI
 
             General_Server_ComboBox.ItemsSource = Subscription.serverlist;
             General_Server_ComboBox.DisplayMemberPath = "title";
-
-            /*Server.Read();
-			General_Server_ComboBox.ItemsSource = Server.serverlist;
-			General_Server_ComboBox.DisplayMemberPath = "title";*/
 
         }
 
@@ -77,24 +76,31 @@ namespace MioSocks_GUI
             Subscription.GetServer();
         }
 
+        static Process Proxy;
+        static Process MioCore;
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
 			try
 			{
-				using(Process p = new Process())
-				{
-					var item = (ServerBase)General_Server_ComboBox.SelectedItem;
-                    p.StartInfo.FileName = "sslocal.exe";
-					p.StartInfo.Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", item.uri);
-					p.Start();
-                }
-				System.Threading.Thread.Sleep(3000);
-                using (Process p = new Process())
+                Proxy = new Process();
                 {
-                    p.StartInfo.FileName = "MioSocks-Core.exe";
-					p.StartInfo.Verb = "runas";
-                    p.Start();
+                    var item = (ServerBase)General_Server_ComboBox.SelectedItem;
+                    Proxy.StartInfo.FileName = "sslocal.exe";
+                    Proxy.StartInfo.Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", item.uri);
+                    Proxy.Start();
+                    
                 }
+				Thread.Sleep(3000);
+                MioCore = new Process();
+                {
+                    MioCore.StartInfo.FileName = "MioSocks-Core.exe";
+                    MioCore.StartInfo.Verb = "runas";
+                    MioCore.Start();
+                }
+                Task.Run(() =>
+                {
+                    NetTraffic(Proxy);
+                });
             }
 			catch(Exception ex)
 			{
