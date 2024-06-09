@@ -32,12 +32,16 @@ namespace MioSocks_GUI
 			InitializeComponent();
 
 			/* Read Subscription List from Json File */
-            Subscribe.Read();
-            Subscription_DataGrid.ItemsSource = Subscribe.subscribelist;
+            Subscription.Read();
 
-			Server.Read();
+			Subscription_DataGrid.ItemsSource = Subscription.subscriptionlist;
+
+            General_Server_ComboBox.ItemsSource = Subscription.serverlist;
+            General_Server_ComboBox.DisplayMemberPath = "title";
+
+            /*Server.Read();
 			General_Server_ComboBox.ItemsSource = Server.serverlist;
-			General_Server_ComboBox.DisplayMemberPath = "title";
+			General_Server_ComboBox.DisplayMemberPath = "title";*/
 
         }
 
@@ -45,14 +49,14 @@ namespace MioSocks_GUI
 		{
 			if (Subscription_Link_TextBox.Text == "")
 				return;
-            Subscribe.subscribelist.Add(
-				new SubscribeData
+            Subscription.subscriptionlist.Add(
+				new SubscriptionData
 				{
 					Status = true,
 					Link = Subscription_Link_TextBox.Text
 				}
 			);
-			Subscribe.Write();
+            Subscription.Write();
 			Subscription_Link_TextBox.Text = "";
         }
 
@@ -60,17 +64,17 @@ namespace MioSocks_GUI
 		{
 			if (Subscription_DataGrid.SelectedItems.Count == 0)
 				return;
-			var selectedItems = Subscription_DataGrid.SelectedItems.Cast<SubscribeData>().ToList();
-			foreach(SubscribeData sub in selectedItems) 
+			var selectedItems = Subscription_DataGrid.SelectedItems.Cast<SubscriptionData>().ToList();
+			foreach(SubscriptionData sub in selectedItems) 
 			{
-                Subscribe.subscribelist.Remove(sub);
+                Subscription.subscriptionlist.Remove(sub);
             }
-            Subscribe.Write();
+            Subscription.Write();
         }
 
         private void SubScription_Refresh_Click(object sender, RoutedEventArgs e)
         {
-			Subscribe.GetServer();
+            Subscription.GetServer();
         }
 
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
@@ -79,15 +83,14 @@ namespace MioSocks_GUI
 			{
 				using(Process p = new Process())
 				{
-					var proxy = (ServerBase)General_Server_ComboBox.SelectedItem;
+					var item = (ServerBase)General_Server_ComboBox.SelectedItem;
                     p.StartInfo.FileName = "sslocal.exe";
-					p.StartInfo.Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", proxy.uri);
+					p.StartInfo.Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", item.uri);
 					p.Start();
                 }
 				System.Threading.Thread.Sleep(3000);
                 using (Process p = new Process())
                 {
-                    var proxy = (ServerBase)General_Server_ComboBox.SelectedItem;
                     p.StartInfo.FileName = "MioSocks-Core.exe";
 					p.StartInfo.Verb = "runas";
                     p.Start();
