@@ -6,22 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
 using System.ComponentModel;
 using Shadowsocks;
-using HandyControl.Tools.Extension;
 using System.IO;
 using System.Threading;
-using Microsoft.Diagnostics.Tracing.Parsers;
-using Microsoft.Diagnostics.Tracing.Session;
 
 namespace MioSocks_GUI
 {
@@ -99,7 +88,7 @@ namespace MioSocks_GUI
                 }
                 Task.Run(() =>
                 {
-                    NetTraffic(Proxy);
+                    NetTraffic(MioCore);
                 });
             }
 			catch(Exception ex)

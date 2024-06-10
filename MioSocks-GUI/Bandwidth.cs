@@ -15,13 +15,9 @@ namespace MioSocks_GUI
 {
 	public partial class MainWindow : Window
 	{
-		private static readonly string[] Suffix = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" };
-		private static long Received;
-		private static long Sent;
+		private readonly string[] Suffix = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" };
 
-		private static TraceEventSession EtwSession;
-
-        public static string Compute(long d)
+        private string Compute(long d)
         {
             const double step = 1024.00;
 
@@ -41,31 +37,32 @@ namespace MioSocks_GUI
 
         public void NetTraffic(Process p)
 		{
-			Received = 0;
-			Sent = 0;
+			long Received = 0;
+			long Sent = 0;
+            TraceEventSession EtwSession = null;
             Task.Run(() =>
 			{
-                using (EtwSession = new TraceEventSession("MyKernelAndClrEventsSession"))
+				EtwSession = new TraceEventSession("MyKernelAndClrEventsSession");
+
+				EtwSession.EnableKernelProvider(KernelTraceEventParser.Keywords.NetworkTCPIP);
+
+				EtwSession.Source.Kernel.TcpIpRecv += data =>
 				{
-					EtwSession.EnableKernelProvider(KernelTraceEventParser.Keywords.NetworkTCPIP);
-
-					EtwSession.Source.Kernel.TcpIpRecv += data =>
+					if (data.ProcessID == p.Id)
 					{
-						if (data.ProcessID == p.Id)
-						{
-							Received += data.size;
-						}
-					};
+						Received += data.size;
+					}
+				};
 
-					EtwSession.Source.Kernel.TcpIpSend += data =>
+				EtwSession.Source.Kernel.TcpIpSend += data =>
+				{
+					if (data.ProcessID == p.Id)
 					{
-						if (data.ProcessID == p.Id)
-						{
-							Sent += data.size;
-						}
-					};
-					EtwSession.Source.Process();
-				}
+						Sent += data.size;
+					}
+				};
+
+				EtwSession.Source.Process();
 			});
 			while (!p.HasExited)
 			{
