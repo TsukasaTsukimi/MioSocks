@@ -32,6 +32,17 @@ namespace MioSocks_GUI
             General_Server_ComboBox.DisplayMemberPath = "title";
 
         }
+        ~MainWindow()
+        {
+            foreach(TabWindowItem item in General_TabControl.Items)
+            {
+                item.process.Kill();
+            }
+            foreach(Process p in Process.GetProcessesByName("simple-obfs"))
+            {
+                p.Kill();
+            }
+        }
 
         private void Subscription_Add_Click(object sender, RoutedEventArgs e)
 		{
@@ -74,22 +85,32 @@ namespace MioSocks_GUI
                 Proxy = new Process();
                 {
                     var item = (ServerBase)General_Server_ComboBox.SelectedItem;
-                    Proxy.StartInfo.FileName = "sslocal.exe";
-                    Proxy.StartInfo.Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", item.uri);
-                    Proxy.Start();
-                    
+                    Proxy.StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = "sslocal.exe",
+                        Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", item.uri),
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    };
                 }
-				Thread.Sleep(3000);
+                
                 MioCore = new Process();
                 {
-                    MioCore.StartInfo.FileName = "MioSocks-Core.exe";
-                    MioCore.StartInfo.Verb = "runas";
-                    MioCore.Start();
+                    MioCore.StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = "MioSocks-Core.exe",
+                        Verb = "runas",
+                    };
                 }
+                Bandwidth_Add(new List<Process> { Proxy});
                 Task.Run(() =>
                 {
                     NetTraffic(MioCore);
                 });
+                MioCore.Start();
+
             }
 			catch(Exception ex)
 			{

@@ -12,8 +12,9 @@
 				<Grid x:Name="General_Grid">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="100*"/>
-						<RowDefinition Height="68*"/>
-						<RowDefinition Height="57*"/>
+						<RowDefinition Height="40*"/>
+						<RowDefinition Height="60*"/>
+                        <RowDefinition Height="40*"/>
 					</Grid.RowDefinitions>
 					<GroupBox Header="Configuration" Background="{x:Null}">
 						<Grid>
@@ -43,7 +44,8 @@
 						</Grid>
 					</GroupBox>
 					<GroupBox Header="Profiles" Grid.Row="1" Background="{x:Null}"/>
-					<Grid Grid.Row="2" >
+                    <TabControl x:Name="General_TabControl" Grid.Row="2" />
+                    <Grid Grid.Row="3" >
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="169*"/>
 							<ColumnDefinition Width="187*"/>

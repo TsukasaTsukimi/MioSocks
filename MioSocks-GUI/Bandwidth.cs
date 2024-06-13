@@ -10,12 +10,54 @@ using Microsoft.Diagnostics.Tracing.Parsers;
 using Microsoft.Diagnostics.Tracing.Session;
 using System.Threading;
 using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace MioSocks_GUI
 {
 	public partial class MainWindow : Window
 	{
 		private readonly string[] Suffix = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" };
+
+		class TabWindowItem : TabItem
+		{
+			public Process process;
+			public TextBox textbox;
+		}
+
+		void Bandwidth_Add(List<Process> ProcessList)
+		{
+			foreach(Process p in ProcessList)
+            {
+                TabWindowItem tabwindowitem = new TabWindowItem();
+
+                p.OutputDataReceived += (sender, e) =>
+                {
+                    tabwindowitem.textbox.Dispatcher.Invoke(() =>
+                        tabwindowitem.textbox.AppendText(e.Data + Environment.NewLine)
+					);
+                };
+                p.ErrorDataReceived += (sender, e) =>
+                {
+                    tabwindowitem.textbox.Dispatcher.Invoke(() =>
+                        tabwindowitem.textbox.AppendText(e.Data + Environment.NewLine)
+                    );
+                };
+
+                p.Start();
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+
+                tabwindowitem.Header = p.ProcessName;
+                tabwindowitem.process = p;
+                tabwindowitem.textbox = new TextBox();
+                tabwindowitem.Content = tabwindowitem.textbox;
+
+                General_TabControl.Items.Add(tabwindowitem);
+                General_TabControl.SelectedItem = tabwindowitem;
+
+                Thread.Sleep(1000);
+            }
+		}
 
         private string Compute(long d)
         {
