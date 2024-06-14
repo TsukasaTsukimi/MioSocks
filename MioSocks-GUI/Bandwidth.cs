@@ -20,37 +20,53 @@ namespace MioSocks_GUI
 
 		class TabWindowItem : TabItem
 		{
-			public Process process;
+            public Process process;
 			public TextBox textbox;
-		}
+            public TabWindowItem(Process p) : base()
+            {
+                textbox = new TextBox();
+                Content = textbox;
+                process = p;
+                if (process.StartInfo.RedirectStandardOutput)
+                {
+                    process.OutputDataReceived += (sender, e) =>
+                    {
+                        textbox.Dispatcher.Invoke(() =>
+                            textbox.AppendText(e.Data + Environment.NewLine)
+                        );
+                    };
+                }
+                if (process.StartInfo.RedirectStandardError)
+                {
+                    process.ErrorDataReceived += (sender, e) =>
+                    {
+                        textbox.Dispatcher.Invoke(() =>
+                            textbox.AppendText(e.Data + Environment.NewLine)
+                        );
+                    };
+                }
+                process.Start();
+                if (process.StartInfo.RedirectStandardOutput)
+                {
+                    process.BeginOutputReadLine();
+                }
+                if (process.StartInfo.RedirectStandardError)
+                {
+                    process.BeginErrorReadLine();
+                }
+                Header = process.ProcessName;
+            }
+            ~TabWindowItem()
+            {
+                process.Kill();
+            }
+        }
 
 		void Bandwidth_Add(List<Process> ProcessList)
 		{
 			foreach(Process p in ProcessList)
             {
-                TabWindowItem tabwindowitem = new TabWindowItem();
-
-                p.OutputDataReceived += (sender, e) =>
-                {
-                    tabwindowitem.textbox.Dispatcher.Invoke(() =>
-                        tabwindowitem.textbox.AppendText(e.Data + Environment.NewLine)
-					);
-                };
-                p.ErrorDataReceived += (sender, e) =>
-                {
-                    tabwindowitem.textbox.Dispatcher.Invoke(() =>
-                        tabwindowitem.textbox.AppendText(e.Data + Environment.NewLine)
-                    );
-                };
-
-                p.Start();
-                p.BeginOutputReadLine();
-                p.BeginErrorReadLine();
-
-                tabwindowitem.Header = p.ProcessName;
-                tabwindowitem.process = p;
-                tabwindowitem.textbox = new TextBox();
-                tabwindowitem.Content = tabwindowitem.textbox;
+                TabWindowItem tabwindowitem = new TabWindowItem(p);
 
                 General_TabControl.Items.Add(tabwindowitem);
                 General_TabControl.SelectedItem = tabwindowitem;

@@ -34,10 +34,6 @@ namespace MioSocks_GUI
         }
         ~MainWindow()
         {
-            foreach(TabWindowItem item in General_TabControl.Items)
-            {
-                item.process.Kill();
-            }
             foreach(Process p in Process.GetProcessesByName("simple-obfs"))
             {
                 p.Kill();
@@ -80,7 +76,7 @@ namespace MioSocks_GUI
         static Process MioCore;
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
-			try
+			//try
 			{
                 Proxy = new Process();
                 {
@@ -112,10 +108,10 @@ namespace MioSocks_GUI
                 MioCore.Start();
 
             }
-			catch(Exception ex)
+			/*catch(Exception ex)
 			{
 				MessageBox.Show(ex.Message);
-			}
+			}*/
         }
 
         private void General_Edit_Button_Click(object sender, RoutedEventArgs e)
