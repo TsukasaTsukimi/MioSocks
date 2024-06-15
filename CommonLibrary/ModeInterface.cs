@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace CommonLibrary
 {
-    internal interface ModeInterface
+    public class ModeBase
     {
-        string GetType();
+        public string Type;
+        public string Configure;
+        private ServerBase Server;
+        public ModeBase(ServerBase Server) { this.Server = Server; }
+        public virtual void Start() { }
+        public virtual void Stop() { }
+
     }
 }

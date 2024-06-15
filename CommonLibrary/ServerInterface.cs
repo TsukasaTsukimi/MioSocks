@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace CommonLibrary
@@ -41,7 +42,7 @@ namespace CommonLibrary
 			UserInfo = uri.UserInfo;
 			Query = uri.Query;
 		}
-		public virtual void Start() { }
+		public virtual Process Start() { return null; }
 		public virtual void Stop() { }
 	}
 }

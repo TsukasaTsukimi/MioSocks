@@ -18,14 +18,15 @@ namespace MioSocks_GUI
 	{
 		private readonly string[] Suffix = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" };
 
-		class TabWindowItem : TabItem
+		private class TabWindowItem : TabItem
 		{
-            public Process process;
-			public TextBox textbox;
+            private Process process;
+			private TextBox textbox;
             public TabWindowItem(Process p) : base()
             {
                 textbox = new TextBox();
                 Content = textbox;
+
                 process = p;
                 if (process.StartInfo.RedirectStandardOutput)
                 {
@@ -45,6 +46,7 @@ namespace MioSocks_GUI
                         );
                     };
                 }
+
                 process.Start();
                 if (process.StartInfo.RedirectStandardOutput)
                 {
@@ -54,15 +56,17 @@ namespace MioSocks_GUI
                 {
                     process.BeginErrorReadLine();
                 }
+
                 Header = process.ProcessName;
             }
-            ~TabWindowItem()
+
+            /*~TabWindowItem()
             {
                 process.Kill();
-            }
+            }*/
         }
 
-		void Bandwidth_Add(List<Process> ProcessList)
+		private void TabWindow_Add(List<Process> ProcessList)
 		{
 			foreach(Process p in ProcessList)
             {
@@ -127,7 +131,12 @@ namespace MioSocks_GUI
                 Thread.Sleep(1000);
                 Dispatcher.Invoke(() =>
 				{
-					this.General_Bandwidth_Label.Content = string.Format("Received:{0} Sent:{1}", Compute(Received), Compute(Sent));
+                    this.General_Bandwidth_Label.Content =
+                        string.Format("Received:{0} Sent:{1} Usage:{2}",
+                            Compute(Received),
+                            Compute(Sent),
+                            Compute(Received + Sent)
+                        );
 				});
             }
             EtwSession?.Dispose();

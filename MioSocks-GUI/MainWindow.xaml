@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:MioSocks_GUI"
 		mc:Ignorable="d"
-		Title="MainWindow" Height="460" Width="800">
+		Title="MainWindow" Height="500" Width="800">
 	<Grid>
 		<TabControl TabStripPlacement="Left">
 			<TabItem Header="General">
@@ -52,6 +52,7 @@
 						</Grid.ColumnDefinitions>
                         <Label x:Name="General_Bandwidth_Label" BorderBrush="{x:Null}"/>
 						<Button x:Name="General_Start_Button" Content="Start" Click="General_Start_Button_Click" Grid.Column="1" />
+                        <Button x:Name="General_Stop_button" Content="Stop" Grid.Column="1" Click="General_Stop_button_Click" Visibility="Collapsed" />
 					</Grid>
 				</Grid>
 			</TabItem>

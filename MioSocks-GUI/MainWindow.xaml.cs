@@ -11,6 +11,7 @@ using System.ComponentModel;
 using Shadowsocks;
 using System.IO;
 using System.Threading;
+using ServerNameSpace;
 
 namespace MioSocks_GUI
 {
@@ -31,13 +32,6 @@ namespace MioSocks_GUI
             General_Server_ComboBox.ItemsSource = Subscription.serverlist;
             General_Server_ComboBox.DisplayMemberPath = "title";
 
-        }
-        ~MainWindow()
-        {
-            foreach(Process p in Process.GetProcessesByName("simple-obfs"))
-            {
-                p.Kill();
-            }
         }
 
         private void Subscription_Add_Click(object sender, RoutedEventArgs e)
@@ -71,26 +65,14 @@ namespace MioSocks_GUI
         {
             Subscription.GetServer();
         }
-
-        static Process Proxy;
+        static ServerData Server;
         static Process MioCore;
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
-			//try
+			try
 			{
-                Proxy = new Process();
-                {
-                    var item = (ServerBase)General_Server_ComboBox.SelectedItem;
-                    Proxy.StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = "sslocal.exe",
-                        Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", item.uri),
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                    };
-                }
+                Server = new ServerData((ServerBase)General_Server_ComboBox.SelectedItem);
+                Process process = Server.Start();
                 
                 MioCore = new Process();
                 {
@@ -100,18 +82,28 @@ namespace MioSocks_GUI
                         Verb = "runas",
                     };
                 }
-                Bandwidth_Add(new List<Process> { Proxy});
+                MioCore.Start();
+
+                TabWindow_Add(new List<Process> { process });
                 Task.Run(() =>
                 {
                     NetTraffic(MioCore);
                 });
-                MioCore.Start();
-
             }
-			/*catch(Exception ex)
+			catch(Exception ex)
 			{
 				MessageBox.Show(ex.Message);
-			}*/
+			}
+            General_Start_Button.Visibility = Visibility.Collapsed;
+            General_Stop_button.Visibility = Visibility.Visible;
+        }
+
+        private void General_Stop_button_Click(object sender, RoutedEventArgs e)
+        {
+            General_TabControl.Items.Clear();
+            Server.Stop();
+            General_Stop_button.Visibility = Visibility.Collapsed;
+            General_Start_Button.Visibility = Visibility.Visible;
         }
 
         private void General_Edit_Button_Click(object sender, RoutedEventArgs e)
@@ -119,5 +111,6 @@ namespace MioSocks_GUI
             ServerNameSpace.ServerWindow a = new ServerNameSpace.ServerWindow((ServerBase)General_Server_ComboBox.SelectedItem);
             a.ShowDialog();
         }
+
     }
 }
