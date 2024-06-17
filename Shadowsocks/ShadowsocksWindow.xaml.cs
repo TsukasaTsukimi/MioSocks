@@ -31,7 +31,7 @@ namespace ServerNameSpace
             InitializeComponent();
             ServerData data = new ServerData(basedata);
             ServerIP_PasswordBox.Password = data.Host;
-            Port_NumericUpDown.Value = data.Port;
+            Port_NumericUpDown.Text = data.Port.ToString();
             Password_PasswordBox.Password = data.password;
             Encryption_ComboBox.Text = data.method;
             Remark_TextBox.Text = data.Fragment;

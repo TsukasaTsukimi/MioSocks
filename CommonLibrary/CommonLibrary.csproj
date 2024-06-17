@@ -53,4 +53,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(TargetDir) $(SolutionDir)build\x64\$(ConfigurationName) /E /I /Y
+xcopy $(TargetDir) $(SolutionDir)build\x86\$(ConfigurationName) /E /I /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

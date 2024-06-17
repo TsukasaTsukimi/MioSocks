@@ -99,6 +99,8 @@ namespace MioSocks_GUI
 
         private void General_Edit_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (General_Server_ComboBox.SelectedIndex == -1)
+                return;
             ServerNameSpace.ServerWindow a = new ServerNameSpace.ServerWindow((ServerBase)General_Server_ComboBox.SelectedItem);
             a.ShowDialog();
         }

@@ -42,13 +42,16 @@ namespace ServerNameSpace
         }
         public override void Stop()
         {
-            foreach (Process p in Process.GetProcessesByName("simple-obfs"))
+            if (shadowsocks != null)
             {
-                p.Kill();
-            }
-            if (!shadowsocks.HasExited)
-            {
-                shadowsocks?.Kill();
+                foreach (Process p in Process.GetProcessesByName("simple-obfs"))
+                {
+                    p.Kill();
+                }
+                if (!shadowsocks.HasExited)
+                {
+                    shadowsocks.Kill();
+                }
             }
         }
     }
