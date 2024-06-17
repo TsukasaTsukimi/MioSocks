@@ -217,6 +217,10 @@
       <Project>{015debae-9710-4051-8616-142d30cd5373}</Project>
       <Name>CommonLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MioCoreMode\MioCoreMode.csproj">
+      <Project>{16844d6d-b227-46c2-872a-2b340d7bc59c}</Project>
+      <Name>MioCoreMode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shadowsocks\Shadowsocks.csproj">
       <Project>{900bfcd1-32ad-4baf-9a5d-cc098d795168}</Project>
       <Name>Shadowsocks</Name>

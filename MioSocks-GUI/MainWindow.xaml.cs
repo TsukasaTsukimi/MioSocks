@@ -12,6 +12,7 @@ using Shadowsocks;
 using System.IO;
 using System.Threading;
 using ServerNameSpace;
+using ModeNameSpace;
 
 namespace MioSocks_GUI
 {
@@ -65,29 +66,19 @@ namespace MioSocks_GUI
         {
             Subscription.GetServer();
         }
-        static ServerData Server;
-        static Process MioCore;
+        static ModeBase modebase;
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
 			try
 			{
-                Server = new ServerData((ServerBase)General_Server_ComboBox.SelectedItem);
-                Process process = Server.Start();
-                
-                MioCore = new Process();
-                {
-                    MioCore.StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = "MioSocks-Core.exe",
-                        Verb = "runas",
-                    };
-                }
-                MioCore.Start();
+                ServerBase serverBase = new ServerData((ServerBase)General_Server_ComboBox.SelectedItem);
+                modebase = new ModeData(serverBase);
+                Process p = modebase.Start();
 
-                TabWindow_Add(new List<Process> { process });
+                TabWindow_Add(new List<Process> { p });
                 Task.Run(() =>
                 {
-                    NetTraffic(MioCore);
+                    NetTraffic(p);
                 });
             }
 			catch(Exception ex)
@@ -101,7 +92,7 @@ namespace MioSocks_GUI
         private void General_Stop_button_Click(object sender, RoutedEventArgs e)
         {
             General_TabControl.Items.Clear();
-            Server.Stop();
+            modebase.Stop();
             General_Stop_button.Visibility = Visibility.Collapsed;
             General_Start_Button.Visibility = Visibility.Visible;
         }
