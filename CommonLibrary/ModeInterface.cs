@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace CommonLibrary
 {
     public class ModeBase
     {
-        public virtual string Type { get; }
+        public virtual string Name { get; }
         public virtual string Configure { get; set; }
         protected ServerBase Server;
         public ModeBase(ServerBase Server) { this.Server = Server; }

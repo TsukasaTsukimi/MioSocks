@@ -8,10 +8,10 @@ using CommonLibrary;
 
 namespace ServerNameSpace
 {
-	public class ServerData: ServerBase
+	public class Shadowsocks : ServerBase
 	{
-		public ServerData(ServerBase data) : base(data) { }
-        ~ServerData(){ Stop(); }
+		public Shadowsocks(ServerBase data) : base(data) { }
+        ~Shadowsocks(){ }
 		private string[] UserInfoList 
 		{
 			get
@@ -30,7 +30,7 @@ namespace ServerNameSpace
             {
                 StartInfo =
                 {
-                    FileName = "sslocal.exe",
+                    FileName = @"sslocal.exe",
                     Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", uri),
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

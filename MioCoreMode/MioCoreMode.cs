@@ -8,12 +8,12 @@ using CommonLibrary;
 
 namespace ModeNameSpace
 {
-    public class ModeData : ModeBase
+    public class MioCoreMode : ModeBase
     {
-        public override string Type { get { return "MioCoreMode"; } }
+        public override string Name { get { return "MioCoreMode"; } }
         private Process MioCore;
-        public ModeData(ServerBase Server) : base(Server) { }
-        ~ModeData() { }
+        public MioCoreMode(ServerBase Server) : base(Server) { }
+        ~MioCoreMode() { }
         public override Process Start() 
         {
             Process process = Server.Start();

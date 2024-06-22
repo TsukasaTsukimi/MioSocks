@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading;
 using ServerNameSpace;
 using ModeNameSpace;
+using System.Reflection;
 
 namespace MioSocks_GUI
 {
@@ -21,6 +22,7 @@ namespace MioSocks_GUI
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+
         public MainWindow()
 		{
 			InitializeComponent();
@@ -69,10 +71,10 @@ namespace MioSocks_GUI
         static ModeBase modebase;
         private void General_Start_Button_Click(object sender, RoutedEventArgs e)
         {
-			try
+			//try
 			{
-                ServerBase serverBase = new ServerData((ServerBase)General_Server_ComboBox.SelectedItem);
-                modebase = new ModeData(serverBase);
+                ServerBase serverbase = new ServerNameSpace.Shadowsocks((ServerBase)General_Server_ComboBox.SelectedItem);
+                modebase = new MioCoreMode(serverbase);
                 Process p = modebase.Start();
 
                 TabWindow_Add(new List<Process> { p });
@@ -81,10 +83,10 @@ namespace MioSocks_GUI
                     NetTraffic(p);
                 });
             }
-			catch(Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
+            /*catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }*/
             General_Start_Button.Visibility = Visibility.Collapsed;
             General_Stop_button.Visibility = Visibility.Visible;
         }
