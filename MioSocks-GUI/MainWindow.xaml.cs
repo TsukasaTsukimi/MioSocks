@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Diagnostics;
 using System.ComponentModel;
-using Shadowsocks;
 using System.IO;
 using System.Threading;
-using ServerNameSpace;
 using ModeNameSpace;
 using System.Reflection;
 
@@ -22,7 +20,7 @@ namespace MioSocks_GUI
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-
+        PluginLoader pluginLoader = new PluginLoader();
         public MainWindow()
 		{
 			InitializeComponent();
@@ -73,8 +71,9 @@ namespace MioSocks_GUI
         {
 			//try
 			{
-                ServerBase serverbase = new ServerNameSpace.Shadowsocks((ServerBase)General_Server_ComboBox.SelectedItem);
-                modebase = new MioCoreMode(serverbase);
+                ServerBase serverdata = pluginLoader.CreateServerInstance((ServerBase)General_Server_ComboBox.SelectedItem);
+
+                modebase = new MioCoreMode(serverdata);
                 Process p = modebase.Start();
 
                 TabWindow_Add(new List<Process> { p });
@@ -103,7 +102,7 @@ namespace MioSocks_GUI
         {
             if (General_Server_ComboBox.SelectedIndex == -1)
                 return;
-            ServerNameSpace.ServerWindow a = new ServerNameSpace.ServerWindow((ServerBase)General_Server_ComboBox.SelectedItem);
+            Window a = pluginLoader.CreateWindowInstance((ServerBase)General_Server_ComboBox.SelectedItem);
             a.ShowDialog();
         }
 

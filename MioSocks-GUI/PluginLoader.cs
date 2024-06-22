@@ -1,21 +1,23 @@
-﻿using System;
+﻿using CommonLibrary;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MioSocks_GUI
 {
     public class PluginLoader
     {
-        public Dictionary<string, Type> Dict;
+        private Dictionary<string, Assembly> Dict;
         private const string ServerPath = @".\plugin\server\";
         private const string ModePath = @".\plugin\mode\";
         public PluginLoader()
         {
-            Dict = new Dictionary<string, Type>();
+            Dict = new Dictionary<string, Assembly>();
             {
                 string[] dllFiles = Directory.GetFiles(ModePath, "*.dll");
                 foreach (string dllFile in dllFiles)
@@ -26,7 +28,7 @@ namespace MioSocks_GUI
                     Type type = assembly.GetType(ServerClassName);
                     if (type != null)
                     {
-                        Dict.Add(filename, type);
+                        Dict.Add(filename, assembly);
                     }
                 }
             }
@@ -40,9 +42,39 @@ namespace MioSocks_GUI
                     Type type = assembly.GetType(ServerClassName);
                     if (type != null)
                     {
-                        Dict.Add(filename, type);
+                        Dict.Add(filename, assembly);
                     }
                 }
+            }
+        }
+        public ServerBase CreateServerInstance(ServerBase serverbase)
+        {
+            try
+            {
+                Assembly assembly = Dict[serverbase.Scheme];
+                Type serverclass = assembly.GetType("ServerNameSpace.ServerData");
+                ServerBase serverdata = (ServerBase)Activator.CreateInstance(serverclass, serverbase);
+                return serverdata;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
+            }
+        }
+        public Window CreateWindowInstance(ServerBase serverbase)
+        {
+            try
+            {
+                Assembly assembly = Dict[serverbase.Scheme];
+                Type windowclass = assembly.GetType("ServerNameSpace.ServerWindow");
+                Window window = (Window)Activator.CreateInstance(windowclass, serverbase);
+                return window;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return null;
             }
         }
     }

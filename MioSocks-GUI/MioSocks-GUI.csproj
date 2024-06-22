@@ -171,6 +171,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bandwidth.cs" />
+    <Compile Include="PluginLoader.cs" />
     <Compile Include="Subscription.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -220,10 +221,6 @@
     <ProjectReference Include="..\MioCoreMode\MioCoreMode.csproj">
       <Project>{16844d6d-b227-46c2-872a-2b340d7bc59c}</Project>
       <Name>MioCoreMode</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Shadowsocks\Shadowsocks.csproj">
-      <Project>{900bfcd1-32ad-4baf-9a5d-cc098d795168}</Project>
-      <Name>Shadowsocks</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

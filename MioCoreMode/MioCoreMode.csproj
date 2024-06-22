@@ -52,7 +52,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir) $(SolutionDir)build\x64\$(ConfigurationName)\plugin\mode /E /I /Y
-xcopy $(TargetDir) $(SolutionDir)build\x86\$(ConfigurationName)\plugin\mode /E /I /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetPath) $(SolutionDir)build\x64\$(ConfigurationName)\plugin\mode /E /I /Y
+xcopy $(TargetPath) $(SolutionDir)build\x86\$(ConfigurationName)\plugin\mode /E /I /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>

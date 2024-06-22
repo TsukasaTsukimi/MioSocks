@@ -21,7 +21,7 @@ namespace ServerNameSpace
         public ServerWindow(ServerBase basedata)
         {
             InitializeComponent();
-            Shadowsocks data = new Shadowsocks(basedata);
+            ServerData data = new ServerData(basedata);
             ServerIP_PasswordBox.Password = data.Host;
             Port_NumericUpDown.Text = data.Port.ToString();
             Password_PasswordBox.Password = data.password;
