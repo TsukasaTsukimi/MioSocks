@@ -30,7 +30,7 @@ namespace ServerNameSpace
             {
                 StartInfo =
                 {
-                    FileName = @".\plugin\thirdparty\sslocal.exe",
+                    FileName = @".\plugin\thirdparty\shadowsocks\sslocal.exe",
                     Arguments = String.Format("-b 127.0.0.1:2801 --server-url \"{0}\"", uri),
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

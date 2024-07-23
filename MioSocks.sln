@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLibrary", "CommonLibr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MioCoreMode", "MioCoreMode\MioCoreMode.csproj", "{16844D6D-B227-46C2-872A-2B340D7BC59C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trojan", "Trojan\Trojan.csproj", "{CBF3E3DC-1683-4D21-9318-097309F15B1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{16844D6D-B227-46C2-872A-2B340D7BC59C}.Release|x64.Build.0 = Release|Any CPU
 		{16844D6D-B227-46C2-872A-2B340D7BC59C}.Release|x86.ActiveCfg = Release|Any CPU
 		{16844D6D-B227-46C2-872A-2B340D7BC59C}.Release|x86.Build.0 = Release|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Debug|x64.Build.0 = Debug|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Debug|x86.Build.0 = Debug|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Release|x64.ActiveCfg = Release|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Release|x64.Build.0 = Release|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{CBF3E3DC-1683-4D21-9318-097309F15B1F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
